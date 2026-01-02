@@ -1,0 +1,13 @@
+bestrong-project/
+├── backend.tf
+├── providers.tf
+├── variables.tf
+├── terraform.tfvars.example
+├── main.tf
+├── networking.tf
+├── monitoring.tf
+├── app.tf
+├── security.tf
+├── data.tf
+├── outputs.tf
+└── .gitignore
