@@ -16,6 +16,3 @@ variable "sql_admin_password" {
   sensitive = true
 }
 
-variable "access_key" {
-  sensitive = true
-}
