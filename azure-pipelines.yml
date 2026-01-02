@@ -61,6 +61,9 @@ stages:
         command: 'plan'
         workingDirectory: $(terraformWorkingDirectory)
         environmentServiceNameAzureRM: $(serviceConnection)
+        commandOptions: |
+          -var="sql_admin_login=$(SQL_ADMIN_LOGIN)"
+          -var="sql_admin_password=$(SQL_ADMIN_PASSWORD)"
 
   - job: Terraform_Main
     displayName: "Main: Deploy to Azure"
@@ -95,4 +98,7 @@ stages:
         command: 'apply'
         workingDirectory: $(terraformWorkingDirectory)
         environmentServiceNameAzureRM: $(serviceConnection)
-        commandOptions: '-auto-approve'
+        commandOptions: |
+          -auto-approve
+          -var="sql_admin_login=$(SQL_ADMIN_LOGIN)"
+          -var="sql_admin_password=$(SQL_ADMIN_PASSWORD)"
