@@ -68,7 +68,7 @@ stages:
     displayName: "Main - Terraform Apply"
     condition: ne(variables['Build.Reason'], 'PullRequest')
     pool:
-      vmImage: ubuntu-latest
+      name: 'selfhostedcicd'
 
     steps:
     - checkout: self
