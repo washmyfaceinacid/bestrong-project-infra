@@ -98,7 +98,7 @@ stages:
         command: 'apply'
         workingDirectory: $(terraformWorkingDirectory)
         environmentServiceNameAzureRM: $(serviceConnection)
-        commandOptions: |
+        commandOptions: >-
           -auto-approve
           -var="sql_admin_login=$(SQL_ADMIN_LOGIN)"
           -var="sql_admin_password=$(SQL_ADMIN_PASSWORD)"
