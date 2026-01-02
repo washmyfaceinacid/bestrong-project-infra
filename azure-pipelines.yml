@@ -12,7 +12,7 @@ variables:
   terraformWorkingDirectory: "."
   serviceConnection: "Azure-Service-Connection"
   backendRG: "rg-bestrong-tfstate"
-  backendStorage: "bestrongtbackend1"
+  backendStorage: "bestrongbackend1"
   backendContainer: "tfstate"
   backendKey: "bestrong.tfstate"
   terraformVersion: "1.6.6"
