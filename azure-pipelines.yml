@@ -9,23 +9,20 @@ pr:
       - main
 
 variables:
-  terraformWorkingDirectory: "terraform"
+  terraformWorkingDirectory: "."
+  serviceConnection: "Azure-Service-Connection"
+  backendRG: "rg-bestrong-tfstate"
+  backendStorage: "bestrongtbackend"
+  backendContainer: "tfstate"
+  backendKey: "infra.tfstate"
+  terraformVersion: "1.6.6"
 
 stages:
 - stage: Terraform
-  displayName: "Terraform CI/CD (Trunk Based)"
+  displayName: "Terraform CI/CD"
   jobs:
-
-  # ========================
-  # PR VALIDATION JOB
-  # ========================
-  - task: TerraformInstaller@1
-  displayName: 'Install Terraform'
-  inputs:
-    terraformVersion: 'latest' 
-    
   - job: Terraform_PR
-    displayName: "PR - Terraform Init / Validate / Plan"
+    displayName: "PR: Validate & Plan"
     condition: eq(variables['Build.Reason'], 'PullRequest')
     pool:
       name: 'selfhostedcicd'
@@ -36,41 +33,37 @@ stages:
     - task: TerraformInstaller@1
       displayName: "Install Terraform"
       inputs:
-        terraformVersion: "1.6.6"
+        terraformVersion: $(terraformVersion)
 
     - task: TerraformTaskV4@4
       displayName: "Terraform Init"
       inputs:
-        provider: azurerm
-        command: init
+        provider: 'azurerm'
+        command: 'init'
         workingDirectory: $(terraformWorkingDirectory)
-        backendServiceArm: Azure-Service-Connection
-        backendAzureRmResourceGroupName: rg-bestrong-tfstate
-        backendAzureRmStorageAccountName: bestrongtbackend
-        backendAzureRmContainerName: tfstate
-        backendAzureRmKey: infra.tfstate
+        backendServiceArm: $(serviceConnection)
+        backendAzureRmResourceGroupName: $(backendRG)
+        backendAzureRmStorageAccountName: $(backendStorage)
+        backendAzureRmContainerName: $(backendContainer)
+        backendAzureRmKey: $(backendKey)
 
     - task: TerraformTaskV4@4
       displayName: "Terraform Validate"
       inputs:
-        provider: azurerm
-        command: validate
+        provider: 'azurerm'
+        command: 'validate'
         workingDirectory: $(terraformWorkingDirectory)
 
     - task: TerraformTaskV4@4
       displayName: "Terraform Plan"
       inputs:
-        provider: azurerm
-        command: plan
+        provider: 'azurerm'
+        command: 'plan'
         workingDirectory: $(terraformWorkingDirectory)
-        environmentServiceNameAzureRM: Azure-Service-Connection
+        environmentServiceNameAzureRM: $(serviceConnection)
 
-
-  # ========================
-  # MAIN DEPLOYMENT JOB
-  # ========================
   - job: Terraform_Main
-    displayName: "Main - Terraform Apply"
+    displayName: "Main: Deploy to Azure"
     condition: ne(variables['Build.Reason'], 'PullRequest')
     pool:
       name: 'selfhostedcicd'
@@ -81,32 +74,25 @@ stages:
     - task: TerraformInstaller@1
       displayName: "Install Terraform"
       inputs:
-        terraformVersion: "1.6.6"
+        terraformVersion: $(terraformVersion)
 
     - task: TerraformTaskV4@4
       displayName: "Terraform Init"
       inputs:
-        provider: azurerm
-        command: init
+        provider: 'azurerm'
+        command: 'init'
         workingDirectory: $(terraformWorkingDirectory)
-        backendServiceArm: Azure-Service-Connection
-        backendAzureRmResourceGroupName: rg-bestrong-tfstate
-        backendAzureRmStorageAccountName: bestrongtbackend
-        backendAzureRmContainerName: tfstate
-        backendAzureRmKey: infra.tfstate
-
-    - task: TerraformTaskV4@4
-      displayName: "Terraform Validate"
-      inputs:
-        provider: azurerm
-        command: validate
-        workingDirectory: $(terraformWorkingDirectory)
+        backendServiceArm: $(serviceConnection)
+        backendAzureRmResourceGroupName: $(backendRG)
+        backendAzureRmStorageAccountName: $(backendStorage)
+        backendAzureRmContainerName: $(backendContainer)
+        backendAzureRmKey: $(backendKey)
 
     - task: TerraformTaskV4@4
       displayName: "Terraform Apply"
       inputs:
-        provider: azurerm
-        command: apply
+        provider: 'azurerm'
+        command: 'apply'
         workingDirectory: $(terraformWorkingDirectory)
-        environmentServiceNameAzureRM: Azure-Service-Connection
-        args: "-auto-approve"
+        environmentServiceNameAzureRM: $(serviceConnection)
+        commandOptions: '-auto-approve'
