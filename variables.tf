@@ -5,7 +5,7 @@ variable "location" {
 
 variable "project_name" {
   description = "Project name"
-  default     = "bestrong"
+  default     = "bestrongproject"
 }
 
 variable "sql_admin_login" {
