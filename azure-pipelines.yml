@@ -19,6 +19,11 @@ stages:
   # ========================
   # PR VALIDATION JOB
   # ========================
+  - task: TerraformInstaller@1
+  displayName: 'Install Terraform'
+  inputs:
+    terraformVersion: 'latest' 
+    
   - job: Terraform_PR
     displayName: "PR - Terraform Init / Validate / Plan"
     condition: eq(variables['Build.Reason'], 'PullRequest')
