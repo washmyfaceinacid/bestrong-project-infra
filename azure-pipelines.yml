@@ -23,7 +23,7 @@ stages:
     displayName: "PR - Terraform Init / Validate / Plan"
     condition: eq(variables['Build.Reason'], 'PullRequest')
     pool:
-      vmImage: ubuntu-latest
+      name: 'selfhostedcicd'
 
     steps:
     - checkout: self
