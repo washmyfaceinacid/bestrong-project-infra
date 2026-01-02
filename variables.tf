@@ -1,6 +1,6 @@
 variable "location" {
   description = "Azure region"
-  default     = "switzerlandnorth"
+  default     = "westus3"
 }
 
 variable "project_name" {
